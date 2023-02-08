@@ -1,0 +1,52 @@
+spring:
+  profiles:
+    active: dev12
+  application:
+    name: addressvalidation
+    
+  
+spring.cloud.stream.default.contentType: application/json
+spring.cloud.stream.default-binder: upsrmq
+
+spring.cloud.stream.binders.upsrmq.type: rabbit
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.template.retry.max-attempts: 4
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.template.retry.maxInterval: 600000
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.template.retry.initialInterval: 120000
+spring.cloud.stream.bindings.upsaudit.destination: e.domain.events
+spring.cloud.stream.bindings.upsaudit.binder: upsrmq
+spring.cloud.stream.rabbit.bindings.upsaudit.producer.exchangeType: fanout
+
+spring.cloud.stream.binders.upsemaileventrmq.type: rabbit
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.template.retry.max-attempts: 4
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.template.retry.maxInterval: 600000
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.template.retry.enabled: true
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.template.retry.initialInterval: 120000
+spring.cloud.stream.bindings.upsemailevent.destination: e.saas.events
+spring.cloud.stream.bindings.upsemailevent.binder: upsemaileventrmq
+spring.cloud.stream.rabbit.bindings.upsemailevent.producer.exchangeType: direct
+
+spring.cloud.stream.rabbit.bindings.upsaudit.producer.use-confirm-header: true
+spring.cloud.stream.bindings.upsaudit.producer.error-channel-enabled: true
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.publisher-confirms: true
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.publisher-returns: true
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.publisher-confirm-type: correlated
+
+spring.cloud.stream.rabbit.bindings.upsemailevent.producer.use-confirm-header: true
+spring.cloud.stream.bindings.upsemailevent.producer.error-channel-enabled: true
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.publisher-confirms: true
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.publisher-returns: true
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.publisher-confirm-type: correlated
+
+spring.rabbitmq.ssl.enabled: true
+spring.cloud.stream.rabbit.bindings.upsemailevent.producer.routingKeyExpression: '''promo.events.in'''
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.host: devrmq.vmware.com
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.port: 5673
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.virtual-host: dev12_domainevents
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.host: devrmq.vmware.com
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.port: 5673
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.virtual-host: sdp
+
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.password: welcome1
+spring.cloud.stream.binders.upsemaileventrmq.environment.spring.rabbitmq.username: siuser
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.password: welcome1
+spring.cloud.stream.binders.upsrmq.environment.spring.rabbitmq.username: siuser

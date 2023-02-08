@@ -1,0 +1,61 @@
+management.endpoints.web.exposure.include: health,env,refresh
+management.endpoint.health.show-details: always
+spring.cloud.stream.default-binder: bind1
+spring:
+  cloud:
+    stream:
+      binders:
+        bind1:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                virtual-host: virtual-host
+                host: localhost
+                port: 5673
+                username: username
+                password: password
+                ssl:
+                  enabled: true
+                publisher-confirms: true
+                publisher-returns: true
+                publisher-confirm-type: correlated
+                template:
+                  retry:
+                    max-attempts: 4
+                    maxInterval: 600000
+                    initialInterval: 120000
+        bind2:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                virtual-host: virtual-host
+                host: localhost
+                port: 5673
+                username: username
+                password: password
+                ssl:
+                  enabled: true
+                publisher-confirms: true
+                publisher-returns: true
+                publisher-confirm-type: correlated
+                template:
+                  retry:
+                    max-attempts: 4
+                    maxInterval: 600000
+                    initialInterval: 120000
+      bindings:
+        audit:
+          producer:
+            exchangeType: fanout
+            use-confirm-header: true
+            error-channel-enabled: true
+          binder: bind1
+          destination: events2.exchange
+        emailevent:
+          producer:
+            exchangeType: direct
+            routingKeyExpression: events.in
+          binder: bind2
+          destination: events.exchange
